@@ -1,0 +1,3 @@
+rule General_Disallow_Custom_Types {
+    Resources.*.Type == /^AWS::/
+}

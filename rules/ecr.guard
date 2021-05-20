@@ -1,0 +1,3 @@
+rule ECR_Disallow_Public_Repositories {
+    Resources.*.Type != /AWS::ECR::PublicRepository/
+}
