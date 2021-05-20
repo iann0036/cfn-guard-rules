@@ -1,5 +1,5 @@
 let ddb_tables = Resources.*[ Type == 'AWS::DynamoDB::Table' ]
 
-rule DynamoDB_SSE_Enabled when %ddb_tables !empty {
+rule DynamoDB_Table_SSEEnabled when %ddb_tables !empty {
     %ddb_tables.Properties.SSESpecification.SSEEnabled == true    
 }

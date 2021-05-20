@@ -1,10 +1,10 @@
 let efs_file_systems = Resources.*[ Type == 'AWS::EFS::FileSystem' ]
 
-rule EFS_File_System_Encryption when %efs_file_systems !empty {
+rule EFS_FileSystem_Encryption when %efs_file_systems !empty {
     %efs_file_systems.Properties.Encrypted == true
 }
 
-rule EFS_File_System_Policy when %efs_file_systems !empty {
+rule EFS_FileSystem_Policy when %efs_file_systems !empty {
     when %efs_file_systems.Properties.FileSystemPolicy exists {
         %efs_file_systems.Properties.FileSystemPolicy is_struct
         %efs_file_systems.Properties.FileSystemPolicy {
@@ -13,9 +13,11 @@ rule EFS_File_System_Policy when %efs_file_systems !empty {
             Statement[*] {
                 this is_struct
                 when Effect != "Deny" {
+                    NotPrincipal !exists
                     Principal is_struct
+                    Principal.Federated !exists
                     when Principal.AWS exists {
-                        Principal.AWS == /arn:aws:iam::\d{12}:role\/.+/
+                        Principal.AWS == /^(?:arn:aws:iam::\d{12}:.+)|(?:\d{12})|(?:arn:aws:sts::\d{12}:assumed-role\/.+)$/
                     }
                 }
             }

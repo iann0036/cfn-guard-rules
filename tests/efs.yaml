@@ -11,11 +11,11 @@
                 Action:
                   - elasticfilesystem:ClientMount
                 Principal:
-                  AWS: arn:aws:iam::111122223333:role/EfsReadOnly
+                  AWS: arn:aws:iam::111122223333:role/SomeRole
   expectations:
     rules:
-      EFS_File_System_Encryption: PASS
-      EFS_File_System_Policy: PASS
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: PASS
 - input:
     Resources:
       FileSystem:
@@ -32,8 +32,8 @@
                   AWS: arn:aws:iam::111122223333:role/EfsReadOnly
   expectations:
     rules:
-      EFS_File_System_Encryption: FAIL
-      EFS_File_System_Policy: PASS
+      EFS_FileSystem_Encryption: FAIL
+      EFS_FileSystem_Policy: PASS
 - input:
     Resources:
       FileSystem:
@@ -50,8 +50,8 @@
                   AWS: arn:aws:iam::111122223333:role/EfsReadOnly
   expectations:
     rules:
-      EFS_File_System_Encryption: FAIL
-      EFS_File_System_Policy: PASS
+      EFS_FileSystem_Encryption: FAIL
+      EFS_FileSystem_Policy: PASS
 - input:
     Resources:
       FileSystem:
@@ -68,8 +68,8 @@
                   AWS: arn:aws:iam::*:role/EfsReadOnly
   expectations:
     rules:
-      EFS_File_System_Encryption: PASS
-      EFS_File_System_Policy: FAIL
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: FAIL
 - input:
     Resources:
       FileSystem:
@@ -86,8 +86,8 @@
                   AWS: '*'
   expectations:
     rules:
-      EFS_File_System_Encryption: PASS
-      EFS_File_System_Policy: FAIL
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: FAIL
 - input:
     Resources:
       FileSystem:
@@ -103,8 +103,8 @@
                 Principal: '*'
   expectations:
     rules:
-      EFS_File_System_Encryption: PASS
-      EFS_File_System_Policy: FAIL
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: FAIL
 - input:
     Resources:
       FileSystem:
@@ -121,5 +121,149 @@
                   AWS: '*'
   expectations:
     rules:
-      EFS_File_System_Encryption: PASS
-      EFS_File_System_Policy: PASS
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  Federated: 'something'
+  expectations:
+    rules:
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: FAIL
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: '123456789012'
+  expectations:
+    rules:
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  CanonicalUser: 'abcdefg...'
+  expectations:
+    rules:
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: arn:aws:iam::123456789012:root
+  expectations:
+    rules:
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: arn:aws:iam::123456789012:user/username
+  expectations:
+    rules:
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: arn:aws:sts::123456789012:assumed-role/myrole/mysession
+  expectations:
+    rules:
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: arn:aws:sts::*:assumed-role/myrole/mysession
+  expectations:
+    rules:
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: FAIL
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  Service: something.amazonaws.com
+  expectations:
+    rules:
+      EFS_FileSystem_Encryption: PASS
+      EFS_FileSystem_Policy: PASS

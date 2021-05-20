@@ -1,6 +1,6 @@
 let rds_instances = Resources.*[ Type == 'AWS::RDS::DBInstance' ]
 
-rule RDS_Public_Access when %rds_instances !empty {
+rule RDS_Instance_PublicAccess when %rds_instances !empty {
     when %rds_instances.Properties.PubliclyAccessible exists {
         %rds_instances.Properties.PubliclyAccessible in ["false", false]
     }

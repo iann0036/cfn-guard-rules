@@ -1,0 +1,191 @@
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  AWS: arn:aws:iam::*:role/SomeRole
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  AWS: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Action:
+                  - '*'
+                Principal:
+                  AWS: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: PASS
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  Federated: 'something'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  AWS: '123456789012'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: PASS
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  CanonicalUser: 'abcdefg...'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: PASS
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  AWS: arn:aws:iam::123456789012:root
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: PASS
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  AWS: arn:aws:iam::123456789012:user/username
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: PASS
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  AWS: arn:aws:sts::123456789012:assumed-role/myrole/mysession
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: PASS
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  AWS: arn:aws:sts::*:assumed-role/myrole/mysession
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - '*'
+                Principal:
+                  Service: something.amazonaws.com
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: PASS

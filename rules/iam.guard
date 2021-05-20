@@ -1,0 +1,22 @@
+let iam_roles = Resources.*[ Type == 'AWS::IAM::Role' ]
+
+rule IAM_Role_AssumeRolePolicy when %iam_roles !empty {
+    when %iam_roles.Properties.AssumeRolePolicyDocument exists {
+        %iam_roles.Properties.AssumeRolePolicyDocument is_struct
+        %iam_roles.Properties.AssumeRolePolicyDocument {
+            Version == "2012-10-17"
+            Statement is_list
+            Statement[*] {
+                this is_struct
+                when Effect != "Deny" {
+                    NotPrincipal !exists
+                    Principal is_struct
+                    Principal.Federated !exists
+                    when Principal.AWS exists {
+                        Principal.AWS == /^(arn:aws:iam::\d{12}:.+|\d{12}|arn:aws:sts::\d{12}:assumed-role\/.+)$/
+                    }
+                }
+            }
+        }
+    }
+}
