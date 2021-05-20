@@ -1,13 +1,9 @@
-let ecr_registrypolicies = Resources.*[ Type == 'AWS::ECR::RegistryPolicy' ]
+let elasticsearch_domains = Resources.*[ Type == 'AWS::Elasticsearch::Domain' ]
 
-rule ECR_PublicRepository_Disallow {
-    Resources.*.Type != /AWS::ECR::PublicRepository/
-}
-
-rule ECR_RegistryPolicy_PolicyText when %ecr_registrypolicies !empty {
-    when %ecr_registrypolicies.Properties.PolicyText exists {
-        %ecr_registrypolicies.Properties.PolicyText is_struct
-        %ecr_registrypolicies.Properties.PolicyText {
+rule Elasticsearch_Domain_AccessPolicies when %elasticsearch_domains !empty {
+    when %elasticsearch_domains.Properties.AccessPolicies exists {
+        %elasticsearch_domains.Properties.AccessPolicies is_struct
+        %elasticsearch_domains.Properties.AccessPolicies {
             Version == "2012-10-17"
             Statement is_list
             Statement[*] {

@@ -1,13 +1,9 @@
-let ecr_registrypolicies = Resources.*[ Type == 'AWS::ECR::RegistryPolicy' ]
+let kms_keys = Resources.*[ Type == 'AWS::KMS::Key' ]
 
-rule ECR_PublicRepository_Disallow {
-    Resources.*.Type != /AWS::ECR::PublicRepository/
-}
-
-rule ECR_RegistryPolicy_PolicyText when %ecr_registrypolicies !empty {
-    when %ecr_registrypolicies.Properties.PolicyText exists {
-        %ecr_registrypolicies.Properties.PolicyText is_struct
-        %ecr_registrypolicies.Properties.PolicyText {
+rule KMS_Key_KeyPolicy when %kms_keys !empty {
+    when %kms_keys.Properties.KeyPolicy exists {
+        %kms_keys.Properties.KeyPolicy is_struct
+        %kms_keys.Properties.KeyPolicy {
             Version == "2012-10-17"
             Statement is_list
             Statement[*] {

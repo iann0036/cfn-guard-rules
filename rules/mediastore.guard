@@ -1,13 +1,9 @@
-let ecr_registrypolicies = Resources.*[ Type == 'AWS::ECR::RegistryPolicy' ]
+let mediastore_containers = Resources.*[ Type == 'AWS::MediaStore::Container' ]
 
-rule ECR_PublicRepository_Disallow {
-    Resources.*.Type != /AWS::ECR::PublicRepository/
-}
-
-rule ECR_RegistryPolicy_PolicyText when %ecr_registrypolicies !empty {
-    when %ecr_registrypolicies.Properties.PolicyText exists {
-        %ecr_registrypolicies.Properties.PolicyText is_struct
-        %ecr_registrypolicies.Properties.PolicyText {
+rule MediaStore_Container_Policy when %mediastore_containers !empty {
+    when %mediastore_containers.Properties.Policy exists {
+        %mediastore_containers.Properties.Policy is_struct
+        %mediastore_containers.Properties.Policy {
             Version == "2012-10-17"
             Statement is_list
             Statement[*] {
