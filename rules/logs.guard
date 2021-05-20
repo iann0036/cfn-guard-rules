@@ -1,0 +1,22 @@
+let logs_destinations = Resources.*[ Type == 'AWS::Logs::Destination' ]
+
+rule Logs_Destination_DestinationPolicy when %logs_destinations !empty {
+    when %logs_destinations.Properties.DestinationPolicy exists {
+        %logs_destinations.Properties.DestinationPolicy is_struct
+        %logs_destinations.Properties.DestinationPolicy {
+            Version == "2012-10-17"
+            Statement is_list
+            Statement[*] {
+                this is_struct
+                when Effect != "Deny" {
+                    NotPrincipal !exists
+                    Principal is_struct
+                    Principal.Federated !exists
+                    when Principal.AWS exists {
+                        Principal.AWS == /^(arn:aws:iam::\d{12}:.+|\d{12}|arn:aws:sts::\d{12}:assumed-role\/.+)$/
+                    }
+                }
+            }
+        }
+    }
+}
