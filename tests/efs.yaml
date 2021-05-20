@@ -1,0 +1,125 @@
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: arn:aws:iam::111122223333:role/EfsReadOnly
+  expectations:
+    rules:
+      EFS_File_System_Encryption: PASS
+      EFS_File_System_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: false
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: arn:aws:iam::111122223333:role/EfsReadOnly
+  expectations:
+    rules:
+      EFS_File_System_Encryption: FAIL
+      EFS_File_System_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          # Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: arn:aws:iam::111122223333:role/EfsReadOnly
+  expectations:
+    rules:
+      EFS_File_System_Encryption: FAIL
+      EFS_File_System_Policy: PASS
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: arn:aws:iam::*:role/EfsReadOnly
+  expectations:
+    rules:
+      EFS_File_System_Encryption: PASS
+      EFS_File_System_Policy: FAIL
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: '*'
+  expectations:
+    rules:
+      EFS_File_System_Encryption: PASS
+      EFS_File_System_Policy: FAIL
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal: '*'
+  expectations:
+    rules:
+      EFS_File_System_Encryption: PASS
+      EFS_File_System_Policy: FAIL
+- input:
+    Resources:
+      FileSystem:
+        Type: AWS::EFS::FileSystem
+        Properties:
+          Encrypted: true
+          FileSystemPolicy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                Action:
+                  - elasticfilesystem:ClientMount
+                Principal:
+                  AWS: '*'
+  expectations:
+    rules:
+      EFS_File_System_Encryption: PASS
+      EFS_File_System_Policy: PASS
