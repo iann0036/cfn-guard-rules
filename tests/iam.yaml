@@ -14,6 +14,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: FAIL
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -30,6 +31,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: FAIL
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -45,6 +47,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: FAIL
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -61,6 +64,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: PASS
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -77,6 +81,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: FAIL
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -93,6 +98,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: PASS
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -109,6 +115,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: PASS
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -125,6 +132,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: PASS
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -141,6 +149,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: PASS
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -157,6 +166,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: PASS
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -173,6 +183,7 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: FAIL
+      IAM_Role_Policies: SKIP
 - input:
     Resources:
       IAMRole:
@@ -189,3 +200,112 @@
   expectations:
     rules:
       IAM_Role_AssumeRolePolicy: PASS
+      IAM_Role_Policies: SKIP
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          Policies:
+            - PolicyName: policy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'ec2:DescribeRegions'
+                    NotResource: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: SKIP
+      IAM_Role_Policies: PASS
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          Policies:
+            - PolicyName: policy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'iam:PassRole'
+                    NotResource: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: SKIP
+      IAM_Role_Policies: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          Policies:
+            - PolicyName: policy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'iam:Pass*'
+                    NotResource: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: SKIP
+      IAM_Role_Policies: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          Policies:
+            - PolicyName: policy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'iam:*'
+                    NotResource: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: SKIP
+      IAM_Role_Policies: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          Policies:
+            - PolicyName: policy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'iam:Pa?sRole'
+                    NotResource: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: SKIP
+      IAM_Role_Policies: FAIL
+- input:
+    Resources:
+      IAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+          Policies:
+            - PolicyName: policy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'iam:Get*'
+                    NotResource: '*'
+  expectations:
+    rules:
+      IAM_Role_AssumeRolePolicy: SKIP
+      IAM_Role_Policies: PASS
