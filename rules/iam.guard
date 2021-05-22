@@ -4,6 +4,10 @@ let iam_groups = Resources.*[ Type == 'AWS::IAM::Group' ]
 let iam_policies = Resources.*[ Type == 'AWS::IAM::Policy' ]
 let iam_managedpolicies = Resources.*[ Type == 'AWS::IAM::ManagedPolicy' ]
 
+rule IAM_AccessKey_Disallow {
+    Resources.*.Type != /AWS::IAM::AccessKey/ <<IAM Acces Keys are disallowed>>
+}
+
 rule IAM_Role_AssumeRolePolicy when %iam_roles !empty {
     when %iam_roles.Properties.AssumeRolePolicyDocument exists {
         %iam_roles.Properties.AssumeRolePolicyDocument is_struct <<Inline policies are not permitted, use an object instead>>
