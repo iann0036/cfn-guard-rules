@@ -1,0 +1,7 @@
+let ram_resourceshares = Resources.*[ Type == 'AWS::RAM::ResourceShare' ]
+
+rule RAM_ResourceShare_AllowExternalPrincipals when %ram_resourceshares !empty {
+    when %ram_resourceshares.Properties.AllowExternalPrincipals exists {
+        %ram_resourceshares.Properties.AllowExternalPrincipals in ["false", false] <<RAM must explicitely deny external principals>>
+    }
+}
