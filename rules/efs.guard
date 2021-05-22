@@ -1,23 +1,23 @@
 let efs_file_systems = Resources.*[ Type == 'AWS::EFS::FileSystem' ]
 
 rule EFS_FileSystem_Encryption when %efs_file_systems !empty {
-    %efs_file_systems.Properties.Encrypted == true
+    %efs_file_systems.Properties.Encrypted == true <<EFS filesystems must be encrypted>>
 }
 
 rule EFS_FileSystem_Policy when %efs_file_systems !empty {
     when %efs_file_systems.Properties.FileSystemPolicy exists {
-        %efs_file_systems.Properties.FileSystemPolicy is_struct
+        %efs_file_systems.Properties.FileSystemPolicy is_struct <<Inline policies are not permitted, use an object instead>>
         %efs_file_systems.Properties.FileSystemPolicy {
-            Version == "2012-10-17"
-            Statement is_list
+            Version == "2012-10-17" <<Version must be 2012-10-17>>
+            Statement is_list <<Statement must be a list>>
             Statement[*] {
-                this is_struct
+                this is_struct <<Statement items must be an object>>
                 when Effect != "Deny" {
-                    NotPrincipal !exists
-                    Principal is_struct
-                    Principal.Federated !exists
+                    NotPrincipal !exists <<NotPrincipal should not be used in an Allow statement to prevent overly permissive permissions>>
+                    Principal is_struct <<Principal should not be an object and must not be a wildcard>>
+                    Principal.Federated !exists <<Federated access to this resource is not permitted>>
                     when Principal.AWS exists {
-                        Principal.AWS == /^(?:arn:aws:iam::\d{12}:.+)|(?:\d{12})|(?:arn:aws:sts::\d{12}:assumed-role\/.+)$/
+                        Principal.AWS == /^(?:arn:aws:iam::\d{12}:.+)|(?:\d{12})|(?:arn:aws:sts::\d{12}:assumed-role\/.+)$/ <<Principal must not have wildcards>>
                     }
                 }
             }

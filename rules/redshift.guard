@@ -2,6 +2,6 @@ let redshift_clusters = Resources.*[ Type == 'AWS::Redshift::Cluster' ]
 
 rule Redshift_Cluster_PublicAccess when %redshift_clusters !empty {
     when %redshift_clusters.Properties.PubliclyAccessible exists {
-        %redshift_clusters.Properties.PubliclyAccessible in ["false", false]
+        %redshift_clusters.Properties.PubliclyAccessible in ["false", false] <<Redshift clusters must not be publicly accessible>>
     }
 }
