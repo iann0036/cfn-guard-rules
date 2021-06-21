@@ -1,0 +1,44 @@
+let codeartifact_domains = Resources.*[ Type == 'AWS::CodeArtifact::Domain' ]
+let codeartifact_repositories = Resources.*[ Type == 'AWS::CodeArtifact::Repository' ]
+
+rule CodeArtifact_Domain_PermissionsPolicyDocument when %codeartifact_domains !empty {
+    when %codeartifact_domains.Properties.PermissionsPolicyDocument exists {
+        %codeartifact_domains.Properties.PermissionsPolicyDocument is_struct <<Inline policies are not permitted, use an object instead>>
+        %codeartifact_domains.Properties.PermissionsPolicyDocument {
+            Version == "2012-10-17" <<Version must be 2012-10-17>>
+            Statement is_list <<Statement must be a list>>
+            Statement[*] {
+                this is_struct <<Statement items must be an object>>
+                when Effect != "Deny" {
+                    NotPrincipal !exists <<NotPrincipal should not be used in an Allow statement to prevent overly permissive permissions>>
+                    Principal is_struct <<Principal should not be an object and must not be a wildcard>>
+                    Principal.Federated !exists <<Federated access to this resource is not permitted>>
+                    when Principal.AWS exists {
+                        Principal.AWS == /^(arn:aws:iam::\d{12}:.+|\d{12}|arn:aws:sts::\d{12}:assumed-role\/.+)$/ <<Principal must not have wildcards>>
+                    }
+                }
+            }
+        }
+    }
+}
+
+rule CodeArtifact_Repository_PermissionsPolicyDocument when %codeartifact_repositories !empty {
+    when %codeartifact_repositories.Properties.PermissionsPolicyDocument exists {
+        %codeartifact_repositories.Properties.PermissionsPolicyDocument is_struct <<Inline policies are not permitted, use an object instead>>
+        %codeartifact_repositories.Properties.PermissionsPolicyDocument {
+            Version == "2012-10-17" <<Version must be 2012-10-17>>
+            Statement is_list <<Statement must be a list>>
+            Statement[*] {
+                this is_struct <<Statement items must be an object>>
+                when Effect != "Deny" {
+                    NotPrincipal !exists <<NotPrincipal should not be used in an Allow statement to prevent overly permissive permissions>>
+                    Principal is_struct <<Principal should not be an object and must not be a wildcard>>
+                    Principal.Federated !exists <<Federated access to this resource is not permitted>>
+                    when Principal.AWS exists {
+                        Principal.AWS == /^(arn:aws:iam::\d{12}:.+|\d{12}|arn:aws:sts::\d{12}:assumed-role\/.+)$/ <<Principal must not have wildcards>>
+                    }
+                }
+            }
+        }
+    }
+}
