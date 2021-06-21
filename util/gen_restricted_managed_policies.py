@@ -8,9 +8,9 @@ deprecated_policies = []
 
 for policy in managed_policies['policies']:
     if policy['privesc']:
-        privesc_policies.append(policy['name'])
+        privesc_policies.append('arn:aws:iam::aws:policy/' + policy['name'])
     if policy['deprecated']:
-        deprecated_policies.append(policy['name'])
+        deprecated_policies.append('arn:aws:iam::aws:policy/' + policy['name'])
 
 privesc_policies_str = '\'' + '\',\''.join(privesc_policies) + '\'' if len(privesc_policies) > 0 else ''
 deprecated_policies_str = '\'' + '\',\''.join(deprecated_policies) + '\'' if len(deprecated_policies) > 0 else ''
