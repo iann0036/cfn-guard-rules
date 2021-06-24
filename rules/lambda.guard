@@ -2,7 +2,8 @@ let lambda_layerversionpermissions = Resources.*[ Type == 'AWS::Lambda::LayerVer
 let lambda_permissions = Resources.*[ Type == 'AWS::Lambda::Permission' ]
 
 rule Lambda_LayerVersionPermission_Principal when %lambda_layerversionpermissions !empty {
-    when %lambda_layerversionpermissions.Properties.Principal exists and %lambda_layerversionpermissions.Properties.OrganizationId !exists {
+    when %lambda_layerversionpermissions.Properties.Principal exists
+        %lambda_layerversionpermissions.Properties.OrganizationId !exists {
         %lambda_layerversionpermissions.Properties.Principal != "*" <<Principal must not have wildcards>>
     }
 }
