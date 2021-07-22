@@ -1,0 +1,5 @@
+let apprunner_services = Resources.*[ Type == 'AWS::AppRunner::Service' ]
+
+rule AppRunner_Service_SSEEnabled when %apprunner_services !empty {
+    %apprunner_services.Properties.EncryptionConfiguration.KmsKey is_string <<Server-side encryption must be enabled>>
+}

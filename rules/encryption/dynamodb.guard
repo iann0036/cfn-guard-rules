@@ -3,3 +3,9 @@ let ddb_tables = Resources.*[ Type == 'AWS::DynamoDB::Table' ]
 rule DynamoDB_Table_SSEEnabled when %ddb_tables !empty {
     %ddb_tables.Properties.SSESpecification.SSEEnabled == true <<Server-side encryption must be enabled>>
 }
+
+let ddb_globaltables = Resources.*[ Type == 'AWS::DynamoDB::GlobalTable' ]
+
+rule DynamoDB_GlobalTable_SSEEnabled when %ddb_globaltables !empty {
+    %ddb_globaltables.Properties.SSESpecification.SSEEnabled == true <<Server-side encryption must be enabled>>
+}

@@ -1,0 +1,5 @@
+let amazonmq_brokers = Resources.*[ Type == 'AWS::AmazonMQ::Broker' ]
+
+rule AmazonMQ_Broker_SSEEnabled when %amazonmq_brokers !empty {
+    %amazonmq_brokers.Properties.EncryptionOptions.UseAwsOwnedKey == true OR %amazonmq_brokers.Properties.EncryptionOptions.KmsKeyId is_string <<Server-side encryption must be enabled>>
+}

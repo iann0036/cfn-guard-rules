@@ -1,0 +1,7 @@
+let workspaces_workspace = Resources.*[ Type == 'AWS::WorkSpaces::Workspace' ]
+
+rule WorkSpaces_Workspace_Encryption when %workspaces_workspace !empty {
+    %workspaces_workspace.Properties.VolumeEncryptionKey is_string <<Workspaces must be encrypted>>
+    %workspaces_workspace.Properties.RootVolumeEncryptionEnabled == true <<Workspace root volumes must be encrypted>>
+    %workspaces_workspace.Properties.UserVolumeEncryptionEnabled == true <<Workspace user volumes must be encrypted>>
+}

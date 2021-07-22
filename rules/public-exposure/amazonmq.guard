@@ -1,0 +1,7 @@
+let amazonmq_brokers = Resources.*[ Type == 'AWS::AmazonMQ::Broker' ]
+
+rule AmazonMQ_Broker_PublicAccess when %amazonmq_brokers !empty {
+    when %amazonmq_brokers.Properties.PubliclyAccessible exists {
+        %amazonmq_brokers.Properties.PubliclyAccessible in ["false", false] <<MQ brokers must not be publicly accessible>>
+    }
+}
