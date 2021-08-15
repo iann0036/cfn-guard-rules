@@ -1,0 +1,7 @@
+let codebuild_projects = Resources.*[ Type == 'AWS::CodeBuild::Project' ]
+
+rule CodeBuild_Project_Visibility when %codebuild_projects !empty {
+    when %codebuild_projects.Properties.Visibility exists {
+        %codebuild_projects.Properties.Visibility not in ["PUBLIC_READ"] <<CodeBuild projects must not be publicly accessible>>
+    }
+}

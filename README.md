@@ -7,7 +7,7 @@
 To use the rules against your CloudFormation template:
 
 ```
-cfn-guard validate -r rules/ -d mytemplate.yaml -s
+cfn-guard validate -r rules/ -s -d mytemplate.yaml
 ```
 
 ## Testing
@@ -15,7 +15,5 @@ cfn-guard validate -r rules/ -d mytemplate.yaml -s
 To run the unit tests:
 
 ```
-cfn-guard test -r rules/efs.guard -t tests/efs.yaml
-cfn-guard test -r rules/iam.guard -t tests/iam.yaml
-...
+find rules -name "*.guard" -print0 | xargs -0 -n1 cfn-guard test -t tests/ -r
 ```
